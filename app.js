@@ -47,7 +47,7 @@ app.get("/", (req, res) => {
 app.get("/files/:id", async (req, res) => {
     const id = req.params.id;
 
-    if (!id) {
+    if (!id || id.length !== 25) {
         return res.status(404).json({
             status: "failed",
             message: "Not found",
@@ -71,7 +71,8 @@ app.get("/files/:id", async (req, res) => {
                 } else {
                     return res.status(404).json({
                         status: 404,
-                        message: "Files not found or might have deleted",
+                        message:
+                            "Files not found or might have deleted or expired",
                     });
                 }
             });
