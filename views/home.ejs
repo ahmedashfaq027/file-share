@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>File share</title>
+</head>
+
+<body>
+    <header>
+        <h1 class="title">Share Files</h1>
+    </header>
+    <main>
+        <form class="form-files">
+            <div class="form-input-elements">
+                <input type="button" onclick="document.getElementById('file').click()" value="Choose files">
+                <input type="file" name="file" id="file" style="display: none;" multiple>
+                <input type="button" id="files-upload" value="Upload">
+            </div>
+            <div class="selected-files"></div>
+        </form>
+    </main>
+    <footer>
+        <p class="copyrights">Made with ♥ by Ashfaq </p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>
