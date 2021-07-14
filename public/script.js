@@ -32,12 +32,15 @@ uploadBtn.addEventListener("click", async (e) => {
 
 function showLinkToUploaded(id) {
     console.log(`${window.location.href}files/${id}`);
+    const link = `${window.location.href}files/view/${id}`;
 
     linkToUploaded.style.display = "block";
     const a = linkToUploaded.querySelector("a");
     a.href = `/files/view/${id}`;
     a.target = "_blank";
-    a.textContent = `${window.location.href}files/view/${id}`;
+    a.textContent = link;
+
+    addLinkToLocalStorage(link);
 }
 
 function hideLinkToUploaded() {
@@ -92,4 +95,17 @@ function addSelectedFiles(files) {
     });
 
     updateSelectedFilesCount(arrFiles.size);
+}
+
+function addLinkToLocalStorage(link) {
+    const lsKey = "sharefiles";
+
+    let lsString = JSON.parse(localStorage.getItem(lsKey)) || [];
+    if (lsString.length !== 0) {
+        lsString.push({ link, addedOn: Date.now() });
+    } else {
+        lsString = [{ link, addedOn: Date.now() }];
+    }
+
+    localStorage.setItem(lsKey, JSON.stringify(lsString));
 }

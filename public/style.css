@@ -102,6 +102,11 @@ main {
     font-size: 1rem;
 }
 
+.saved-btn {
+    margin: 0.2rem;
+    padding: 0.5rem;
+}
+
 @media (max-width: 481px) {
     html {
         font-size: 14px;
@@ -115,6 +120,47 @@ main {
 }
 
 /* ************* Not found ************* */
+
+/* ************* Saved ************* */
+.saved {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 1rem auto;
+    margin-top: 0;
+    padding: 0 1rem;
+    /* max-width: 20rem; */
+    width: 90%;
+    height: max-content;
+
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    overflow-y: scroll;
+}
+
+.saved::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.saved::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.saved > * + * {
+    border-top: 1px solid black;
+}
+
+.saved > p > * + * {
+    margin-left: 8px;
+}
+
+.saved > p > span {
+    font-weight: 700;
+}
 
 /* ************* Download ************* */
 .files-download {

@@ -8,8 +8,8 @@ const zip = require("express-zip");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const path = `uploads/sharefiles_${req.id}`;
-        if (!fs.existsSync(path)) fs.mkdirSync(path);
+        const path = `./uploads/sharefiles_${req.id}`;
+        if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
         cb(null, path);
     },
     filename: (req, file, cb) => {
@@ -42,6 +42,10 @@ mongoose.connect(
 // Routes
 app.get("/", (req, res) => {
     res.render("home", {});
+});
+
+app.get("/saved", (req, res) => {
+    res.render("saved", {});
 });
 
 app.get("/files/:id", async (req, res) => {
