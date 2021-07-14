@@ -14,6 +14,7 @@ function getLinksFromLocalStorage() {
 function createSavedLinkDiv(item) {
     console.log(item);
     const savedLinkDiv = document.createElement("p");
+    savedLinkDiv.classList.add("saved-item");
 
     const addedOn = new Date(item.addedOn);
     const dateSpan = document.createElement("span");
