@@ -18,16 +18,17 @@ footer {
     justify-content: center;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    padding-top: 0 !important;
+header h1 {
+    margin-bottom: 0;
+    text-align: center;
+}
 
-    margin-top: 1rem;
+footer {
+    padding-top: 0 !important;
 }
 
 main {
-    height: 72%;
+    height: 75%;
 }
 
 .form-files {
@@ -36,7 +37,6 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
 }
 
 .form-input-elements > * {
@@ -49,23 +49,143 @@ main {
     text-align: center;
 }
 
+.selected-files-count {
+    margin: 1rem 0.7rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
 .selected-files {
     margin: 1rem;
+    margin-top: 0;
+    padding: 0 1rem;
+    max-width: 15rem;
+    width: 100%;
+    height: max-content;
+
+    border: 1px solid rgba(0, 0, 0, 0.2);
     overflow-y: scroll;
+}
+
+.selected-files::-webkit-scrollbar {
+    width: 7px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.selected-files::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.selected-files > * + * {
+    border-top: 1px solid black;
 }
 
 .selected-file {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+
+    margin: 0;
+    padding: 0.7rem;
 }
 
 .selected-file button {
-    padding: 0;
-    margin-left: 5px;
+    cursor: pointer;
+    margin: 0 8px;
     background: none;
     border: none;
+    align-content: center;
     outline: 0;
     font-weight: 900;
     font-size: 1rem;
+}
+
+@media (max-width: 481px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 326px) {
+    html {
+        font-size: 12px;
+    }
+}
+
+/* ************* Not found ************* */
+
+/* ************* Download ************* */
+.files-download {
+    padding: 0.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.files-download-all {
+    text-align: center;
+}
+
+.files-download-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.files-download-group input {
+    margin: 0.2rem;
+    padding: 0.5rem;
+}
+
+.files-download-group > span {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.files-download-group > * + * {
+    margin-left: 15px !important;
+}
+
+.files-available {
+    margin: 1rem auto;
+    margin-top: 0;
+    padding: 0 1rem;
+    max-width: 20rem;
+    width: 90%;
+    height: max-content;
+
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    overflow-y: scroll;
+}
+
+.files-available::-webkit-scrollbar {
+    width: 7px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.files-available::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.files-available > * + * {
+    border-top: 1px solid black;
+}
+
+.file-available {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 0.7rem;
+    margin: 0;
+}
+
+.file-available > input {
+    display: flex;
+    margin: auto 8px;
 }

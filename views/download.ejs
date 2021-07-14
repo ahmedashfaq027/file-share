@@ -5,12 +5,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
     <title>Share Files: Thanks for downloading...</title>
 </head>
 
 <body>
-    <h1>Not found</h1>
+    <header>
+        <h1>Please review the files you want to download</h1>
+    </header>
+    <main>
+        <div class="files-download">
+            <div class="files-download-group">
+                <a href="<%= downloadAll %>" target="_blank">
+                    <input type="button" id="files-download-all" value="Download All">
+                </a>
+                <span>(or)</span>
+                <input type="button" id="files-download-selected" value="Download Selected">
+            </div>
+            <h6 class="selected-files-count"><span>0</span> files selected</h6>
+            <div class="files-available">
+                <% for(let i=0; i<path.length; i++) { %>
+                    <p class="file-available">
+                        <input type="checkbox">
+                        <%= path[i].name %>
+                    </p>
+                    <% } %>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p class="copyrights">Made with ♥ by Ashfaq </p>
+    </footer>
+    <script src="/downloadscript.js"></script>
 </body>
 
 </html>

@@ -1,11 +1,11 @@
 const file = document.querySelector("#file");
 const selectedFiles = document.querySelector(".selected-files");
+const selectedFilesCount = document.querySelector(".selected-files-count span");
 const linkToUploaded = document.querySelector(".files-uploaded");
 const uploadBtn = document.querySelector("#files-upload");
 let arrFiles = new Map();
 
 file.addEventListener("input", (e) => {
-    console.log("input", e.target.value);
     addSelectedFiles([...e.target.files]);
     e.target.value = "";
 });
@@ -16,8 +16,6 @@ uploadBtn.addEventListener("click", async (e) => {
     files.forEach((file) => {
         formData.append("files", file);
     });
-
-    console.log(formData, files);
 
     const res = await fetch("/files", {
         method: "post",
@@ -33,12 +31,21 @@ uploadBtn.addEventListener("click", async (e) => {
 });
 
 function showLinkToUploaded(id) {
-    console.log(id);
+    console.log(`${window.location.href}files/${id}`);
 
     linkToUploaded.style.display = "block";
     const a = linkToUploaded.querySelector("a");
-    a.href = `/files/${id}`;
-    a.textContent = `${window.location.href}files/${id}`;
+    a.href = `/files/view/${id}`;
+    a.target = "_blank";
+    a.textContent = `${window.location.href}files/view/${id}`;
+}
+
+function hideLinkToUploaded() {
+    linkToUploaded.style.display = "none";
+}
+
+function updateSelectedFilesCount(count) {
+    selectedFilesCount.innerText = count;
 }
 
 function createSelectedFileDiv(file) {
@@ -67,17 +74,22 @@ function removeSelectedFileDiv(e) {
     selectedFiles.removeChild(parent);
 
     arrFiles.delete(parseInt(id));
-    console.log(arrFiles);
+    updateSelectedFilesCount(arrFiles.size);
 }
 
 function removeAllFileDivs() {
     selectedFiles.innerHTML = "";
+    updateSelectedFilesCount(arrFiles.size);
 }
 
 function addSelectedFiles(files) {
+    if (arrFiles.size === 0) {
+        hideLinkToUploaded();
+    }
+
     files.forEach((item) => {
         createSelectedFileDiv(item);
     });
 
-    console.log(arrFiles);
+    updateSelectedFilesCount(arrFiles.size);
 }

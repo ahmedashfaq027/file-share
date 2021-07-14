@@ -8,7 +8,7 @@ const zip = require("express-zip");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const path = "uploads/" + file.fieldname + "_" + req.id;
+        const path = `uploads/sharefiles_${req.id}`;
         if (!fs.existsSync(path)) fs.mkdirSync(path);
         cb(null, path);
     },
@@ -32,7 +32,7 @@ app.use(express.static("public"));
 
 // DB Connection
 mongoose.connect(
-    "mongodb://localhost:27017/fileshare",
+    "mongodb://localhost:27017/sharefiles",
     { useNewUrlParser: true, useUnifiedTopology: true },
     () => {
         console.log(`Database is connected.`);
@@ -46,8 +46,10 @@ app.get("/", (req, res) => {
 
 app.get("/files/:id", async (req, res) => {
     const id = req.params.id;
+    const fileNames = req.query.item;
+    // console.log("Query Params >>>>>", fileNames);
 
-    if (!id || id.length !== 25) {
+    if (!id) {
         return res.status(404).json({
             status: "failed",
             message: "Not found",
@@ -55,19 +57,37 @@ app.get("/files/:id", async (req, res) => {
     } else {
         try {
             FilesModel.findOne({ _id: id }).then((resp) => {
-                console.log(resp);
+                // console.log("mongoose has >>>>>", resp);
                 const path = [];
                 resp.fileNames.forEach((item) => {
                     if (fs.existsSync(resp.filePath + "/" + item)) {
-                        path.push({
-                            path: resp.filePath + "/" + item,
-                            name: item,
-                        });
+                        if (fileNames) {
+                            if (fileNames.includes(item)) {
+                                path.push({
+                                    path: resp.filePath + "/" + item,
+                                    name: item,
+                                });
+                            }
+                        } else {
+                            path.push({
+                                path: resp.filePath + "/" + item,
+                                name: item,
+                            });
+                        }
                     }
                 });
 
+                // console.log("downloaded >>>>>", path);
                 if (path.length !== 0) {
-                    return res.status(200).zip(path);
+                    let fileName = resp.filePath.split("/");
+                    fileName = fileName[fileName.length - 1];
+                    return res
+                        .status(200)
+                        .zip(
+                            path,
+                            (fileName ? fileName : "share-files-attachment") +
+                                ".zip"
+                        );
                 } else {
                     return res.status(404).json({
                         status: 404,
@@ -77,7 +97,7 @@ app.get("/files/:id", async (req, res) => {
                 }
             });
         } catch (err) {
-            return res.json({
+            return res.status(404).json({
                 status: 404,
                 message: "Not found",
                 err: err,
@@ -86,9 +106,62 @@ app.get("/files/:id", async (req, res) => {
     }
 });
 
+app.get("/files/view/:id", async (req, res) => {
+    const id = req.params.id;
+
+    if (!id) {
+        return res.status(404).json({
+            status: "failed",
+            message: "Not found",
+        });
+    } else {
+        try {
+            FilesModel.findOne({ _id: id })
+                .then((resp) => {
+                    // console.log(resp);
+                    const path = [];
+                    resp.fileNames.forEach((item) => {
+                        if (fs.existsSync(resp.filePath + "/" + item)) {
+                            path.push({
+                                path: resp.filePath + "/" + item,
+                                name: item,
+                            });
+                        }
+                    });
+
+                    if (path.length !== 0) {
+                        res.render("download", {
+                            path: path,
+                            downloadAll: `${req.originalUrl.replace(
+                                "/view",
+                                ""
+                            )}`,
+                        });
+                    } else {
+                        res.render("notfound", {
+                            errMessage: "Uh-oh! Files not found on server :(",
+                        });
+                    }
+                })
+                .catch((err) => {
+                    res.render("notfound", {
+                        errMessage: res.render("notfound", {
+                            errMessage:
+                                "Uh-oh! Could not find the requested file(s) in the database :(",
+                        }),
+                    });
+                });
+        } catch (err) {
+            res.render("notfound", {
+                errMessage: "Uh-oh! Could not find the requested file :(",
+            });
+        }
+    }
+});
+
 app.post("/files", upload.array("files"), async (req, res) => {
     const files = req.files;
-    console.log(files);
+    // console.log(files);
 
     if (files) {
         const dest = files[0].destination;
