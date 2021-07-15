@@ -23,6 +23,7 @@ footer {
     text-align: center;
 
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
@@ -137,7 +138,7 @@ main {
 .saved {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 
     margin: 1rem auto;
     margin-top: 0;
