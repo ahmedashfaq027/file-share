@@ -2,6 +2,7 @@ const file = document.querySelector("#file");
 const selectedFiles = document.querySelector(".selected-files");
 const selectedFilesCount = document.querySelector(".selected-files-count span");
 const linkToUploaded = document.querySelector(".files-uploaded");
+const errorDiv = document.querySelector(".files-uploaded-error");
 const uploadBtn = document.querySelector("#files-upload");
 let arrFiles = new Map();
 
@@ -17,30 +18,43 @@ uploadBtn.addEventListener("click", async (e) => {
         formData.append("files", file);
     });
 
-    const res = await fetch("/files", {
+    let res = await fetch("/files", {
         method: "post",
         body: formData,
     })
         .then((response) => response.json())
         .then((data) => data)
-        .catch((err) => console.log(err));
+        .catch((err) => err);
 
+    if (res.status === "failed") {
+        showErrorDiv();
+    }
     arrFiles = new Map();
     removeAllFileDivs();
     showLinkToUploaded(res.data._id);
 });
 
+function showErrorDiv() {
+    errorDiv.style.display = "flex";
+}
+
+function hideErrorDiv() {
+    errorDiv.style.display = "none";
+}
+
 function showLinkToUploaded(id) {
-    console.log(`${window.location.href}files/${id}`);
-    const link = `${window.location.href}files/view/${id}`;
+    if (id) {
+        console.log(`${window.location.href}files/${id}`);
+        const link = `${window.location.href}files/view/${id}`;
 
-    linkToUploaded.style.display = "block";
-    const a = linkToUploaded.querySelector("a");
-    a.href = `/files/view/${id}`;
-    a.target = "_blank";
-    a.textContent = link;
+        linkToUploaded.style.display = "block";
+        const a = linkToUploaded.querySelector("a");
+        a.href = `/files/view/${id}`;
+        a.target = "_blank";
+        a.textContent = link;
 
-    addLinkToLocalStorage(link);
+        addLinkToLocalStorage(link);
+    }
 }
 
 function hideLinkToUploaded() {
@@ -88,6 +102,7 @@ function removeAllFileDivs() {
 function addSelectedFiles(files) {
     if (arrFiles.size === 0) {
         hideLinkToUploaded();
+        hideErrorDiv();
     }
 
     files.forEach((item) => {

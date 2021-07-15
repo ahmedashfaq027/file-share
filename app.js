@@ -5,6 +5,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const FilesModel = require("./models/files");
 const zip = require("express-zip");
+require("dotenv/config");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -32,7 +33,7 @@ app.use(express.static("public"));
 
 // DB Connection
 mongoose.connect(
-    "mongodb://localhost:27017/sharefiles",
+    process.env.DB_URL,
     { useNewUrlParser: true, useUnifiedTopology: true },
     () => {
         console.log(`Database is connected.`);
@@ -188,6 +189,9 @@ app.post("/files", upload.array("files"), async (req, res) => {
                 data: saved,
             });
         } catch (err) {
+            const path = `./uploads/sharefiles_${req.id}`;
+            fs.rmdirSync(path, { recursive: true });
+
             return res.status(403).json({
                 status: "failed",
                 message: "Unable to save",

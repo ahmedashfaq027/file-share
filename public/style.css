@@ -57,9 +57,11 @@ main {
     padding: 0.5rem;
 }
 
-.files-uploaded {
+.files-uploaded,
+.files-uploaded-error {
     display: none;
     text-align: center;
+    margin: 0.7rem;
 }
 
 .selected-files-count {
@@ -143,7 +145,7 @@ main {
     margin: 1rem auto;
     margin-top: 0;
     padding: 0 1rem;
-    /* max-width: 20rem; */
+    max-width: max-content;
     width: 90%;
     height: max-content;
 
