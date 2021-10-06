@@ -4,6 +4,8 @@ const selectedFilesCount = document.querySelector(".selected-files-count span");
 const linkToUploaded = document.querySelector(".files-uploaded");
 const errorDiv = document.querySelector(".files-uploaded-error");
 const uploadBtn = document.querySelector("#files-upload");
+const uploadProgressBar = document.querySelector(".uploadBar")
+
 let arrFiles = new Map();
 
 file.addEventListener("input", (e) => {
@@ -12,6 +14,7 @@ file.addEventListener("input", (e) => {
 });
 
 uploadBtn.addEventListener("click", async (e) => {
+    getProgress();
     let formData = new FormData();
     let files = [...arrFiles.values()];
     files.forEach((file) => {
@@ -29,10 +32,41 @@ uploadBtn.addEventListener("click", async (e) => {
     if (res.status === "failed") {
         showErrorDiv();
     }
+
     arrFiles = new Map();
     removeAllFileDivs();
     showLinkToUploaded(res.data._id);
 });
+
+async function getProgress(){
+    showProgressBar()
+   let progress = 0;
+   while(progress < 100){
+      let res = await fetch("/progress", {
+        method: "get",
+        
+    })
+        .then((response) => response.json())
+        .then((data) => data)
+        .catch((err) => err);
+        progress = (res.progress | 0)
+        updateProgressBar(progress);
+   }
+   hideProgressBar()   
+}
+
+
+function showProgressBar(){
+    uploadProgressBar.style.display = "block";
+}
+
+function hideProgressBar(){
+    uploadProgressBar.style.display = "none";
+}
+
+function updateProgressBar(per){
+    uploadProgressBar.value = per;
+}
 
 function showErrorDiv() {
     errorDiv.style.display = "flex";
