@@ -31,6 +31,22 @@ app.use(express.json());
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
+// Progress bar middleware
+let uploadProgress = 0;
+function progressMid(req,res,next){
+    let progress =0;
+    const fileSize = req.headers["content-length"];
+
+   // event listener
+    req.on("data",(chunk)=>{
+         progress += chunk.length;
+         const percentage = (progress/fileSize) * 100;
+         uploadProgress = percentage;
+    });
+
+    next();
+}
+
 // DB Connection
 mongoose.connect(
     process.env.DB_URL,
@@ -164,7 +180,11 @@ app.get("/files/view/:id", async (req, res) => {
     }
 });
 
-app.post("/files", upload.array("files"), async (req, res) => {
+app.get("/progress", (req,res)=>{
+    res.json({progress:uploadProgress});
+})
+
+app.post("/files" ,progressMid, upload.array("files"), async (req, res) => {
     const files = req.files;
     // console.log(files);
 
