@@ -99,6 +99,11 @@ function updateSelectedFilesCount(count) {
     selectedFilesCount.innerText = count;
 }
 
+function humanFileSize(size){
+    let i = Math.floor(Math.log(size)/Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B','KB','MB','GB','TB'][i];
+}
+
 function createSelectedFileDiv(file) {
     const key = file.lastModified + file.size;
     if (!arrFiles.has(key)) {
@@ -111,7 +116,7 @@ function createSelectedFileDiv(file) {
         x.innerText = "x";
         x.addEventListener("click", removeSelectedFileDiv);
 
-        p.innerHTML = file.name;
+        p.innerHTML = `${humanFileSize(file.size)}  - ${file.name}`;
         p.appendChild(x);
         selectedFiles.appendChild(p);
 
