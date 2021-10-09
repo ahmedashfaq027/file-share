@@ -186,7 +186,7 @@ app.get("/progress", (req,res)=>{
 
 app.post("/files" ,progressMid, upload.array("files"), async (req, res) => {
     const files = req.files;
-    // console.log(files);
+    //console.log(files);
 
     if (files) {
         const dest = files[0].destination;
